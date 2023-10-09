@@ -21,3 +21,5 @@ const getCalculateCoordinates = (min, max, decimalPlace) => {
   return randomFloat.toFixed(decimalPlace);
 };
 
+getRandomInteger(1, 10);
+getCalculateCoordinates(1, 10, 2);
