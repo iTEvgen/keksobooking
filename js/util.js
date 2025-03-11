@@ -1,4 +1,4 @@
-const getRandomInteger = (min, max) => {
+const getRandomInteger = (min, max, decimalPlace) => {
   if (min < 0 || max < 0) {
     return -1;
   }
@@ -6,19 +6,11 @@ const getRandomInteger = (min, max) => {
   if (min > max) {
     [min, max] = [max, min];
   }
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-const getCalculateCoordinates = (min, max, decimalPlace) => {
-  if (min < 0 || max < 0) {
-    return -1;
+  const random = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (decimalPlace !== 0) {
+    return random.toFixed(decimalPlace);
   }
-
-  if (min > max) {
-    [min, max] = [max, min];
-  }
-  const randomFloat = Math.random() * (max - min + 1) + min;
-  return randomFloat.toFixed(decimalPlace);
+  return random;
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
@@ -30,6 +22,5 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 export {
   getRandomInteger,
-  getCalculateCoordinates,
   getRandomArrayElement,
 };
