@@ -102,13 +102,22 @@ const Coordinates = {
 
 const title = getRandomArrayElement(AD_TITLES);
 
+const availableNumbers = [...NUMBER_ARRAY];
+
+const getUniqueAvatarNumber = (array) => {
+  const randomIndex = getRandomInteger(0, array.length - 1);
+  const avatarNumber = array[randomIndex];
+  array.splice(randomIndex, 1);
+  return avatarNumber;
+};
 const housingInformationObject = () => {
   const location = housingLocationObject();
   const address = `x: ${location.x}, y: ${location.y}`;
+  const avatarNumber = getUniqueAvatarNumber(availableNumbers);
 
   return {
     author: {
-      avatar: `img/avatars/user${getRandomArrayElement(NUMBER_ARRAY)}.svg`,
+      avatar: `img/avatars/user${avatarNumber}.svg`
     },
     offer: {
       title: title,
@@ -121,7 +130,7 @@ const housingInformationObject = () => {
       checkout: getRandomArrayElement(DATE_TIME),
       features: getCheckDuplicatesArray(FEATURE_VALUES),
       description: getRandomArrayElement(AD_DESCRIPTION),
-      photos: Array.from({length: getRandomInteger(1, IMAGES.length - 1)}, () => getRandomArrayElement(IMAGES)),
+      photos: Array.from({length: getRandomInteger(1, IMAGES.length)}, () => getRandomArrayElement(IMAGES)),
     },
     location: location,
   };
@@ -129,4 +138,4 @@ const housingInformationObject = () => {
 
 const housingInformationArray = new Array(MAX_STEPS).fill(null).map(() => housingInformationObject());
 
-export { housingInformationArray, FEATURE_VALUES, Coordinates };
+export { housingInformationArray, Coordinates };
