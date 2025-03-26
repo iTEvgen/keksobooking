@@ -1,4 +1,4 @@
-const getRandomInteger = (min, max, decimalPlace) => {
+const getRandomInteger = (min, max, decimalPlace = 0) => {
   if (min < 0 || max < 0) {
     return -1;
   }
@@ -6,11 +6,10 @@ const getRandomInteger = (min, max, decimalPlace) => {
   if (min > max) {
     [min, max] = [max, min];
   }
+
   const random = Math.floor(Math.random() * (max - min + 1)) + min;
-  if (decimalPlace !== 0) {
-    return random.toFixed(decimalPlace);
-  }
-  return random;
+
+  return decimalPlace ? random.toFixed(decimalPlace) : random;
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];

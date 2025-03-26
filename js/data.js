@@ -117,7 +117,7 @@ const housingInformationObject = () => {
 
   return {
     author: {
-      avatar: `img/avatars/user${avatarNumber}.svg`
+      avatar: `img/avatars/user${avatarNumber}.png`
     },
     offer: {
       title: title,
@@ -130,7 +130,7 @@ const housingInformationObject = () => {
       checkout: getRandomArrayElement(DATE_TIME),
       features: getCheckDuplicatesArray(FEATURE_VALUES),
       description: getRandomArrayElement(AD_DESCRIPTION),
-      photos: Array.from({length: getRandomInteger(1, IMAGES.length)}, () => getRandomArrayElement(IMAGES)),
+      photos: getCheckDuplicatesArray(IMAGES),
     },
     location: location,
   };
@@ -138,4 +138,4 @@ const housingInformationObject = () => {
 
 const housingInformationArray = new Array(MAX_STEPS).fill(null).map(() => housingInformationObject());
 
-export { housingInformationArray, Coordinates };
+export { housingInformationArray, Coordinates, PRICE };
