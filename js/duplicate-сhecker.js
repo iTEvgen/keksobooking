@@ -1,10 +1,12 @@
 import { getRandomInteger, getRandomArrayElement } from './util.js';
 
 const getCheckDuplicatesArray = (array) => {
-  const featureLength = getRandomInteger(1, array.length);
-  const features = Array.from({ length: featureLength }, () => getRandomArrayElement(array));
-  const uniqueFeatures = features.filter((item, index) => features.indexOf(item) === index);
-  return uniqueFeatures;
+  const featureLength = getRandomInteger(0, array.length);
+  const uniqueFeatures = new Set();
+  while (uniqueFeatures.size < featureLength) {
+    uniqueFeatures.add(getRandomArrayElement(array));
+  }
+  return Array.from(uniqueFeatures);
 };
 
 export { getCheckDuplicatesArray };
