@@ -1,6 +1,7 @@
-import { getRandomInteger, getRandomArrayElement } from './util.js';
-import { getCheckDuplicatesArray } from './duplicate-сhecker.js';
-import { housingLocationObject } from './map-сoordinates.js';
+
+import { getRandomInteger, getRandomArrayElement} from './util.js';
+import { getCheckDuplicatesArray } from './duplicate-checker.js';
+import { housingLocationObject } from './map-coordinates.js';
 
 const MAX_STEPS = 10;
 
@@ -100,8 +101,6 @@ const Coordinates = {
   MAX_Y: 139.80,
 };
 
-const title = getRandomArrayElement(AD_TITLES);
-
 const availableNumbers = [...NUMBER_ARRAY];
 
 const getUniqueAvatarNumber = (array) => {
@@ -120,7 +119,7 @@ const housingInformationObject = () => {
       avatar: `img/avatars/user${avatarNumber}.png`
     },
     offer: {
-      title: title,
+      title: getRandomArrayElement(AD_TITLES),
       address: address,
       price: getRandomArrayElement(PRICE),
       type: getRandomArrayElement(TYPE_HOUSING),
@@ -137,5 +136,4 @@ const housingInformationObject = () => {
 };
 
 const housingInformationArray = new Array(MAX_STEPS).fill(null).map(() => housingInformationObject());
-
 export { housingInformationArray, Coordinates, PRICE };
