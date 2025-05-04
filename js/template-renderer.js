@@ -15,6 +15,7 @@ const getTypeDescription = (type) => {
 
 const renderCard = (cardTemplate, cardData) => {
   const cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__avatar').src = cardData.author.avatar;
   cardElement.querySelector('.popup__title').textContent = cardData.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = cardData.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = `${cardData.offer.price} ₽/ночь`;
@@ -36,7 +37,7 @@ const renderCard = (cardTemplate, cardData) => {
   photosContainer.innerHTML = '';
   cardData.offer.photos.forEach((photo) => {
     const photoElement = document.createElement('img');
-    photoElement.classList.add('.popup__photos');
+    photoElement.classList.add('popup__photo');
     photoElement.src = photo;
     photoElement.width = 45;
     photoElement.height = 40;
@@ -45,16 +46,16 @@ const renderCard = (cardTemplate, cardData) => {
   });
 
   const validationRules = {
-    '.popup__title': !cardData.offer.title,
-    '.popup__text--address': !cardData.offer.address,
-    '.popup__text--price': !cardData.offer.price,
-    '.popup__type': !cardData.offer.type,
-    '.popup__text--capacity': !cardData.offer.rooms || !cardData.offer.guests,
-    '.popup__text--time': !cardData.offer.checkin || !cardData.offer.checkout,
-    '.popup__description': !cardData.offer.description,
-    '.popup__features': !cardData.offer.features || cardData.offer.features.length === 0,
-    '.popup__photos': !cardData.offer.photos || cardData.offer.photos.length === 0,
-    '.popup__avatar': !cardData.author.avatar
+    '.popup__title': (data) => !data.offer.title,
+    '.popup__text--address': (data) => !data.offer.address,
+    '.popup__text--price': (data) => !data.offer.price,
+    '.popup__type': (data) => !data.offer.type,
+    '.popup__text--capacity': (data) => !data.offer.rooms || !data.offer.guests,
+    '.popup__text--time': (data) => !data.offer.checkin || !data.offer.checkout,
+    '.popup__description': (data) => !data.offer.description,
+    '.popup__features': (data) => !data.offer.features || data.offer.features.length === 0,
+    '.popup__photos': (data) => !data.offer.photos || data.offer.photos.length === 0,
+    '.popup__avatar': (data) => !data.author.avatar
   };
 
   const elementToCheck = Object.entries(validationRules).map(([selector, conditionFn]) => ({
@@ -62,25 +63,23 @@ const renderCard = (cardTemplate, cardData) => {
     conditionFn: conditionFn(cardData),
   }));
 
-  elementToCheck.forEach(({selector, condition}) => {
-    if (condition) {
+  elementToCheck.forEach(({selector, conditionFn}) => {
+    if (conditionFn) {
       const element = cardElement.querySelector(selector);
       if (element) {
         element.remove();
+
       }
     }
   });
-
   return cardElement;
 };
 
-const renderCardToFragment = (cardTemplate, cardData, containerSelector) => {
+const renderCardToFragment = (cardTemplate, cardData) => {
   const fragment = document.createDocumentFragment();
   const cardClone = renderCard (cardTemplate, cardData);
   fragment.appendChild(cardClone);
-  const containet = document.querySelector(containerSelector);
-  containet.appendChild(fragment);
+  return fragment;
 };
 
 export { renderCardToFragment };
-
