@@ -68,7 +68,6 @@ const renderCard = (cardTemplate, cardData) => {
       const element = cardElement.querySelector(selector);
       if (element) {
         element.remove();
-
       }
     }
   });
@@ -77,7 +76,7 @@ const renderCard = (cardTemplate, cardData) => {
 
 const renderCardToFragment = (cardTemplate, cardData) => {
   const fragment = document.createDocumentFragment();
-  const cardClone = renderCard (cardTemplate, cardData);
+  const cardClone = renderCard(cardTemplate, cardData);
   fragment.appendChild(cardClone);
   return fragment;
 };
