@@ -4,15 +4,41 @@ import { renderCardToFragment } from './template-renderer.js';
 import { housingInformationArray } from './data.js';
 import { createIcon } from './util.js';
 
+const DEFAULT_LAT = 35.68950;
+const DEFAULT_LNG = 139.69171;
+
+let mainMarkerInstance = null;
+let mapInstance = null;
+
+const updateCoordinates = ({ lat, lng }) => {
+  const format = (num) => num.toFixed(5);
+  if(mainMarkerInstance) {
+    mainMarkerInstance.bindPopup(`Координаты: ${format(lat)}, ${format(lng)}`);
+  }
+  LocationInput.value = `x:${format(lat)}, y:${format(lng)}`;
+};
+
+const resetMainMarker = () => {
+  if (mainMarkerInstance) {
+    mainMarkerInstance.setLatLng([DEFAULT_LAT, DEFAULT_LNG]);
+    updateCoordinates(mainMarkerInstance.getLatLng());
+  }
+  if (mapInstance) {
+    mapInstance.setView([DEFAULT_LAT, DEFAULT_LNG], 11);
+  }
+};
+
 const initializationMaps = () => {
   disableForm();
   return new Promise((resolve) => {
     setTimeout(() => {
       const map = L.map('map-canvas')
         .setView({
-          lat: 35.68950,
-          lng: 139.69171,
+          lat: DEFAULT_LAT,
+          lng: DEFAULT_LNG,
         }, 11);
+
+      mapInstance = map;
 
       L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -23,8 +49,8 @@ const initializationMaps = () => {
 
       const mainMarker = L.marker(
         {
-          lat: 35.68950,
-          lng: 139.69171
+          lat: DEFAULT_LAT,
+          lng: DEFAULT_LNG
         },
         {
           draggable: true,
@@ -32,12 +58,6 @@ const initializationMaps = () => {
         }
       );
       mainMarker.addTo(map);
-
-      const updateCoordinates = ({ lat, lng }) => {
-        const format = (num) => num.toFixed(5);
-        mainMarker.bindPopup(`Координаты: ${format(lat)}, ${format(lng)}`);
-        LocationInput.value = `x:${format(lat)}, y:${format(lng)}`;
-      };
 
       updateCoordinates(mainMarker.getLatLng());
 
@@ -71,6 +91,8 @@ const initializationMaps = () => {
           );
       });
 
+      mainMarkerInstance = mainMarker;
+
       map.whenReady(() => {
         enableForm();
         resolve(map);
@@ -79,4 +101,4 @@ const initializationMaps = () => {
   });
 };
 
-export { initializationMaps };
+export { initializationMaps, resetMainMarker };
