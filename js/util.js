@@ -1,3 +1,6 @@
+/* global L:readonly */
+
+const ALERT_SHOW_TIME = 5000;
 const validateAndSwap = (min, max) => {
   if (min < 0 || max < 0) {
     return -1;
@@ -42,15 +45,59 @@ const createIcon = (url, size, anchor) => L.icon({
   iconAnchor: anchor
 });
 
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.borderRadius = '15px';
+  alertContainer.style.fontSize = '28px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.color = 'white';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const createEscKeydownHandler = (closeCallback) => (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closeCallback();
+  }
+};
+
+const setupPopupCloseHandler = (popupTemplate, closeCallback) => {
+  const escHandler = createEscKeydownHandler(closeCallback);
+  const clickHandler = () => closeCallback();
+
+  document.addEventListener('keydown', escHandler);
+  setTimeout(() => {
+    document.addEventListener('click', clickHandler);
+  }, 100);
+
+  // Возвращаем функции для очистки
+  return () => {
+    document.removeEventListener('keydown', escHandler);
+    document.removeEventListener('click', clickHandler);
+  };
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createIcon,
-  getRandomFloatNumber
+  getRandomFloatNumber,
+  showAlert,
+  setupPopupCloseHandler
 };
-
-
-// const getStringCount = (text) => {
-//   const length = text.length;
-//   return (length >= 30 && length <= 100) ? console.log('Все отлично заголовок нужной длины.') : console.log('Все пропало залогово не подходит.');
-// };
