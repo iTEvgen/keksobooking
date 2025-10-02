@@ -77,14 +77,16 @@ const createEscKeydownHandler = (closeCallback) => (evt) => {
   }
 };
 
-const setupPopupCloseHandler = (popupTemplate, closeCallback) => {
+const setupPopupCloseHandler = (popupTemplate, closeCallback, closeOnClick = true) => {
   const escHandler = createEscKeydownHandler(closeCallback);
   const clickHandler = () => closeCallback();
 
   document.addEventListener('keydown', escHandler);
-  setTimeout(() => {
-    document.addEventListener('click', clickHandler);
-  }, 100);
+  if (closeOnClick) {
+    setTimeout(() => {
+      document.addEventListener('click', clickHandler);
+    }, 100);
+  }
 
   // Возвращаем функции для очистки
   return () => {

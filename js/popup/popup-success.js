@@ -8,13 +8,10 @@ const showSuccessPopup = () => {
 
   body.appendChild(popupTemplate);
 
-
-  const closePopup = () => {
+  const cleanupHandlers = setupPopupCloseHandler(popupTemplate, () => {
     popupTemplate.remove();
     cleanupHandlers();
-  };
-
-  const cleanupHandlers = setupPopupCloseHandler(popupTemplate, closePopup);
+  }, true);
 };
 
 export { showSuccessPopup };

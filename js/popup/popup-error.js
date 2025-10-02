@@ -8,12 +8,16 @@ const showErrorPopup = () => {
 
   body.appendChild(popupTemplate);
 
-  const closePopup = () => {
+  const cleanupHandlers = setupPopupCloseHandler(popupTemplate, () => {
     popupTemplate.remove();
     cleanupHandlers();
-  };
+  }, false);
 
-  const cleanupHandlers = setupPopupCloseHandler(popupTemplate, closePopup);
+  const retryButton = popupTemplate.querySelector('.error__button');
+  retryButton.addEventListener('click', () => {
+    popupTemplate.remove();
+    cleanupHandlers();
+  });
 };
 
 export { showErrorPopup };
