@@ -26,24 +26,28 @@ const renderCard = (cardTemplate, cardData) => {
 
   const featuresList = cardElement.querySelector('.popup__features');
   featuresList.innerHTML = '';
-  cardData.offer.features.forEach((features) => {
-    const featureElement = document.createElement('li');
-    featureElement.classList.add('popup__feature', `popup__feature--${features}`);
-    featureElement.ariaLabel = `доступные удобства ${features}`;
-    featuresList.appendChild(featureElement);
-  });
+  if (cardData.offer.features && Array.isArray(cardData.offer.features)) {
+    cardData.offer.features.forEach((features) => {
+      const featureElement = document.createElement('li');
+      featureElement.classList.add('popup__feature', `popup__feature--${features}`);
+      featureElement.ariaLabel = `доступные удобства ${features}`;
+      featuresList.appendChild(featureElement);
+    });
+  }
 
   const photosContainer = cardElement.querySelector('.popup__photos');
   photosContainer.innerHTML = '';
-  cardData.offer.photos.forEach((photo) => {
-    const photoElement = document.createElement('img');
-    photoElement.classList.add('popup__photo');
-    photoElement.src = photo;
-    photoElement.width = 45;
-    photoElement.height = 40;
-    photoElement.alt = 'Фотография жилья';
-    photosContainer.appendChild(photoElement);
-  });
+  if(cardData.offer.photos && Array.isArray(cardData.offer.photos)) {
+    cardData.offer.photos.forEach((photo) => {
+      const photoElement = document.createElement('img');
+      photoElement.classList.add('popup__photo');
+      photoElement.src = photo;
+      photoElement.width = 45;
+      photoElement.height = 40;
+      photoElement.alt = 'Фотография жилья';
+      photosContainer.appendChild(photoElement);
+    });
+  }
 
   const validationRules = {
     '.popup__title': (data) => !data.offer.title,
