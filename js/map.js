@@ -1,7 +1,8 @@
+/* global L:readonly */
+
 import { disableForm, enableForm } from './form-js-module/form-state.js';
 import { LocationInput } from './form-js-module/form-elements.js';
 import { renderCardToFragment } from './template-renderer.js';
-import { housingInformationArray } from './data.js';
 import { createIcon } from './util.js';
 
 const DEFAULT_LAT = 35.68950;
@@ -26,6 +27,36 @@ const resetMainMarker = () => {
   if (mapInstance) {
     mapInstance.setView([DEFAULT_LAT, DEFAULT_LNG], 11);
   }
+};
+
+const renderMarkers = (cardDataArray, map) => {
+  const popupTemplate = document.querySelector('#card').content.querySelector('.popup');
+  const userIcon = createIcon('../libs/leaflet/img/pin.svg', [40, 40], [20, 40]);
+
+  cardDataArray.forEach((cardData) => {
+    const popupContent = document.createElement('div');
+    popupContent.classList.add('popup-container');
+    popupContent.append(
+      renderCardToFragment(popupTemplate, cardData)
+    );
+
+    const userMarker = L.marker(
+      {
+        lat: cardData.location.lat,
+        lng: cardData.location.lng,
+      },
+      {
+        icon: userIcon,
+      }
+    );
+    userMarker
+      .addTo(map)
+      .bindPopup(popupContent,
+        {
+          keepInView: true,
+        }
+      );
+  });
 };
 
 const initializationMaps = () => {
@@ -63,34 +94,6 @@ const initializationMaps = () => {
 
       mainMarker.on('moveend', (evt) => updateCoordinates(evt.target.getLatLng()));
 
-      const popupTemplate = document.querySelector('#card').content.querySelector('.popup');
-      const userIcon = createIcon('../libs/leaflet/img/pin.svg', [40, 40], [20, 40]);
-
-      housingInformationArray.forEach((cardData) => {
-        const popupContent = document.createElement('div');
-        popupContent.classList.add('popup-container');
-        popupContent.append(
-          renderCardToFragment(popupTemplate, cardData)
-        );
-
-        const userMarker = L.marker(
-          {
-            lat: cardData.location.x,
-            lng: cardData.location.y,
-          },
-          {
-            icon: userIcon,
-          }
-        );
-        userMarker
-          .addTo(map)
-          .bindPopup(popupContent,
-            {
-              keepInView: true,
-            },
-          );
-      });
-
       mainMarkerInstance = mainMarker;
 
       map.whenReady(() => {
@@ -101,4 +104,8 @@ const initializationMaps = () => {
   });
 };
 
-export { initializationMaps, resetMainMarker };
+const addMarkersToMap = (cardDataArray, map) => {
+  renderMarkers(cardDataArray, map);
+};
+
+export { initializationMaps, resetMainMarker, addMarkersToMap };
