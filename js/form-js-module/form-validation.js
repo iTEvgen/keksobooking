@@ -1,5 +1,8 @@
 import { adFormUsers } from './form-elements.js';
 import { resetMainMarker } from '../map.js';
+import { showSuccessPopup } from '../popup/popup-success.js';
+import { showErrorPopup } from '../popup/popup-error.js';
+import { sentData } from '../api.js';
 
 // Модуль для обработки формы
 const initFormValidation = () => {
@@ -209,15 +212,34 @@ const initFormValidation = () => {
   });
 
   // Обработчик отправки формы
-  form.addEventListener('submit', (evt) => {
-    if (!validateForm(evt)) {
+  const setUserFormSubmit = () => {
+    form.addEventListener('submit', (evt) => {
       evt.preventDefault();
-    }
-  });
+      if (!validateForm(evt)) {
+        return;
+      }
 
-  // Инициализация начальных значений
+      const formData = new FormData(form);
+
+      sentData(
+        formData,
+        () => {
+          showSuccessPopup();
+          form.reset();
+          updatePricePlaceholder();
+          syncRoomsCapacity();
+          resetMainMarker();
+        },
+        () => {
+          showErrorPopup();
+        }
+      );
+    });
+  };
+
   updatePricePlaceholder();
   syncRoomsCapacity();
+  setUserFormSubmit();
 
   const resetButton = form.querySelector('.ad-form__reset');
   if (resetButton) {
